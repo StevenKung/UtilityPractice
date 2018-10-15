@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GeneralUtility.Joystick;
 
 namespace GeneralUtility
 {
@@ -20,9 +21,11 @@ namespace GeneralUtility
     /// </summary>
     public partial class MainWindow : Window
     {
+     
         public MainWindow()
         {
             InitializeComponent();
+            Closing += (s, e) => ViewModelLocator.Cleanup();
         }
     }
 }

@@ -3,10 +3,161 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GeneralUtility"
+        xmlns:local="clr-namespace:GeneralUtility.Joystick"
+        xmlns:vm="clr-namespace:GeneralUtility"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Name="JoyStickWindow"
+        Title="JoyStickControl" Height="700" Width="400"  DataContext="{Binding Source={x:Static vm:ViewModelLocator.MainStatic}}">
+    <Border Margin="5">
+        <StackPanel>
+
+
+            <GroupBox Header="Message" Style="{StaticResource GroupStyle}">
+                <GroupItem>
+                    <TextBlock Text="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="3"/>
+                </GroupItem>
+            </GroupBox>
+
+            <GroupBox Header="Speed Mode" Style="{StaticResource GroupStyle}">
+                <Grid  Style="{StaticResource GridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <RadioButton Grid.Column="0" CommandParameter="{x:Static local:SpeedEnum.SLOW}" Content="Slow"   Command="{Binding Path=RadioButtonCommand}" GroupName="Speed" HorizontalAlignment="Center"/>
+                    <RadioButton Grid.Column="1" CommandParameter="{x:Static local:SpeedEnum.NORMAL}" IsChecked="True" Content="Normal"  GroupName="Speed" HorizontalAlignment="Center"/>
+                    <RadioButton  Grid.Column="2" CommandParameter="{x:Static local:SpeedEnum.FAST}" Content="Fast" GroupName="Speed" HorizontalAlignment="Center"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="Function" Style="{StaticResource GroupStyle}" 
+                 Visibility="{Binding Path=FunctionNames, Source={x:Static vm:ViewModelLocator.MainStatic}, Converter={vm:FuntionGropVisibilityConverter}}">
+                <ListBox ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="ListBox1" ItemsSource="{Binding Path=FunctionNames}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding}" Visibility="{Binding Converter={vm:StringToVisibilityConverter}}" 
+                                   CommandParameter="{Binding}" Command="{Binding Path=FunctionCommand, Source={x:Static vm:ViewModelLocator.MainStatic}}" Margin="10"  Width="145" Height="20" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+
+            <GroupBox Header="Channel Set" Style="{StaticResource GroupStyle}">
+                <Grid Style="{StaticResource GridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button CommandParameter="true" Command="{Binding Path=ChangeChannelCommand}" Height="Auto" Grid.Column="0" Margin="20 5">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="MenuLeft" />
+                            <TextBlock Text="Previouse"/>
+                        </StackPanel>
+                    </Button>
+                    <Button CommandParameter="false" Command="{Binding Path=ChangeChannelCommand}" Height="Auto" Grid.Column="1" Margin="20 5">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Next"/>
+                            <iconPacks:PackIconMaterial Kind="MenuRight" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </GroupBox>
+
+
+            <GroupBox Header="JoystickX" Style="{StaticResource GroupStyle}">
+                <Grid Style="{StaticResource GridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Path=ChannelNameX}" FontSize=" 15" Margin="20 5"/>
+                    <Border  Grid.Column="1" BorderBrush="Black" BorderThickness="0.2">
+                        <TextBlock Grid.Column="1" Text="{Binding Path=ValueX}"  FontSize=" 15"  Margin="20 5"/>
+                    </Border>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="JoystickY" Style="{StaticResource GroupStyle}">
+                <Grid Style="{StaticResource GridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Path=ChannelNameY}" FontSize=" 15" Margin="20 5"/>
+                    <Border  Grid.Column="1" BorderBrush="Black" BorderThickness="0.2">
+                        <TextBlock Text="{Binding Path=ValueY}"  FontSize=" 15"  Margin="20 5"/>
+                    </Border>
+
+                </Grid>
+            </GroupBox>
+
+
+            <Grid Height="120" Width="120" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1" CommandParameter="{x:Static local:DirectionEnum.UP}" Command="{Binding JoyStickTriggerCommand}">
+                        <iconPacks:PackIconFontAwesome Kind="AngleDoubleUpSolid" Style="{StaticResource AutoSizeIcon}"/>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" CommandParameter="{x:Static local:DirectionEnum.LEFT}" Command="{Binding JoyStickTriggerCommand}">
+                        <iconPacks:PackIconFontAwesome Kind="AngleDoubleLeftSolid" Style="{StaticResource AutoSizeIcon}"/>
+                    </Button>
+                    <Button Grid.Column="2" CommandParameter="{x:Static local:DirectionEnum.RIGHT}" Command="{Binding JoyStickTriggerCommand}">
+                        <iconPacks:PackIconFontAwesome Kind="AngleDoubleRightSolid" Style="{StaticResource AutoSizeIcon}"/>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1"  CommandParameter="{x:Static local:DirectionEnum.DOWN}" Command="{Binding JoyStickTriggerCommand}">
+                        <iconPacks:PackIconFontAwesome  Kind="AngleDoubleDownSolid" Style="{StaticResource AutoSizeIcon}"/>
+                    </Button>
+
+                </Grid>
+            </Grid>
+
+
+            <Grid Style="{StaticResource GridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="OK" Margin="20 10" Grid.Column="0"/>
+                <Button Content="Cancel" CommandParameter="{Binding ElementName=JoyStickWindow}" Command="{Binding CancelCommand}" Margin="20 10" Grid.Column="1"/>
+            </Grid>
+
+
+
+            <iconPacks:PackIconFontAwesome Kind="SpinnerSolid" HorizontalAlignment="Right"  Spin="True" />
+        </StackPanel>
+    </Border>
+
 </Window>
