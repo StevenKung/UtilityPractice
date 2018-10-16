@@ -27,9 +27,9 @@ namespace GeneralUtility
             RadioButtonCommand = new RelayCommand<object>(RadioButtonExecute);
             FunctionCommand = new RelayCommand<object>(FunctionExecute);
             ChangeChannelCommand = new RelayCommand<object>(ChangeChannelExecute);
-            JoyStickTriggerCommand = new RelayCommand<object>(JoystickTriggerExecute);
-            CancelCommand = new RelayCommand<object>(CancelExecute);
-            ConfirmCommand = new RelayCommand<object>(ConfirmExecutte);
+            JoyStickTriggerCommand = new RelayCommand<object>(JoystickTriggerExecute, isTriggerExecutable);
+            ConfirmCommand = new RelayCommand<object>(ConfirmExecutte, isTriggerExecutable);
+            CancelCommand = new RelayCommand<object>(CancelExecute, isTriggerExecutable);
         }
 
         public ICommand RadioButtonCommand { get; private set; }
@@ -41,7 +41,7 @@ namespace GeneralUtility
         public ICommand FunctionCommand { get; private set; }
         private void FunctionExecute(object parameter)
         {
-            joy.SetCallBack(parameter.ToString());
+            joy.CallBackFunction(parameter.ToString());
         }
 
         public ICommand ChangeChannelCommand { get; private set; }
@@ -57,8 +57,6 @@ namespace GeneralUtility
         public ICommand JoyStickTriggerCommand { get; private set; }
         private async void JoystickTriggerExecute(object parameter)
         {
-            if (!isComplete)
-                return;
             isComplete = false;
             var dir = (DirectionEnum)parameter;
             await joy.TriggerCommandAsync(dir);
@@ -66,16 +64,9 @@ namespace GeneralUtility
             RaisePropertyChanged(nameof(ValueX));
             RaisePropertyChanged(nameof(ValueY));
         }
-
+        private bool isTriggerExecutable(object parameter) { return isComplete; }
 
         public ICommand CancelCommand { get; private set; }
-        private void CancelExecute(object parameter)
-        {
-            joy.RestoreAllChannelsValue();
-            var window = (Window)parameter;
-            window.DialogResult = false;
-            window?.Close();
-        }
 
         public ICommand ConfirmCommand { get; private set; }
         private void ConfirmExecutte(object parameter)
@@ -84,16 +75,25 @@ namespace GeneralUtility
             window.DialogResult = true;
             window?.Close();
         }
+        private void CancelExecute(object parameter)
+        {
+            joy.RestoreAllChannelsValue();
+            var window = (Window)parameter;
+            window.DialogResult = false;
+            window?.Close();
+        }
 
         private void Testused()
         {
             joy.SetMessage("SetMessage");
-            joy.SetFunction("11", "222", "3333");
+            joy.SetFunction("Function1", "Function2", "Function3");
             MotorSimulation motor = new MotorSimulation()
             {
                 DeviceName = "compMotor"
             };
-            joy.SetXChannel(motor.DeviceName, 1111, motor);
+            int benchmark = 1111;
+            motor.Drive(benchmark);
+            joy.SetXChannel(motor.DeviceName, benchmark, motor);
             joy.SetJoySpeedX(int.MaxValue, int.MaxValue / 20, 1);
 
         }

@@ -119,12 +119,10 @@ namespace GeneralUtility.Joystick
             return await Task.WhenAny(task, Task.Delay(1000000)) == task;
         }
 
-        void CallBackFunction(string FunctionName)
+        internal void CallBackFunction(string FunctionName)
         {
             mCurStation?.CallBack(FunctionName);
         }
-
-
 
         public void SetJoySeep(double Fast, double Normal, double slow, SETEnum ChannelSet = SETEnum.ONE)
         {

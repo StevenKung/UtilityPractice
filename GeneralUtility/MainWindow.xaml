@@ -72,7 +72,7 @@
             </GroupBox>
 
 
-            <GroupBox Header="JoystickX" Style="{StaticResource GroupStyle}">
+            <GroupBox Header="JoystickX" Visibility="{Binding Path=ChannelNameX, Converter={vm:StringToVisibilityConverter}}" Style="{StaticResource GroupStyle}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
@@ -84,7 +84,7 @@
                     </Border>
                 </Grid>
             </GroupBox>
-            <GroupBox Header="JoystickY" Style="{StaticResource GroupStyle}">
+            <GroupBox Header="JoystickY" Visibility="{Binding Path=ChannelNameY, Converter={vm:StringToVisibilityConverter}}" Style="{StaticResource GroupStyle}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
@@ -150,7 +150,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Content="OK" Margin="20 10" Grid.Column="0"/>
+                <Button Content="OK" CommandParameter="{Binding ElementName=JoyStickWindow}" Command="{Binding CancelCommand}" Margin="20 10" Grid.Column="0"/>
                 <Button Content="Cancel" CommandParameter="{Binding ElementName=JoyStickWindow}" Command="{Binding CancelCommand}" Margin="20 10" Grid.Column="1"/>
             </Grid>
 

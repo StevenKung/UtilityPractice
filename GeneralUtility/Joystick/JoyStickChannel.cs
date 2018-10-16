@@ -25,6 +25,7 @@ namespace GeneralUtility.Joystick
 
             backupValue = Value;
             currentValue = Value;
+            Bond();
         }
 
         internal bool Increment(double delta)
