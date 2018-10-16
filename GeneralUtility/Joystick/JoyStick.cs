@@ -67,12 +67,12 @@ namespace GeneralUtility.Joystick
             bool syncX = false;
             bool syncY = false;
 
-            if (mChannelSets[set].ChannelX != null)
+            if (mChannelSets[set].ChannelX != null && isVectorX())
             {
                 SetJoyCurSpeedModeX();
                 syncX = mChannelSets[set].ChannelX.Increment(mFactorX * StepX());
             }
-            if (mChannelSets[set].ChannelY != null)
+            if (mChannelSets[set].ChannelY != null && isVectorY())
             {
                 SetJoyCurSpeedModeY();
                 syncY = mChannelSets[set].ChannelY.Increment(mFactorY * StepY());
@@ -157,6 +157,16 @@ namespace GeneralUtility.Joystick
             SetJoyCurSpeedModeX();
             SetJoyCurSpeedModeY();
         }
+        bool isVectorX()
+        {
+            bool isDirUpDown = (mCurDirection == DirectionEnum.UP) || (mCurDirection == DirectionEnum.DOWN);
+            return !isDirUpDown;
+        }
+        bool isVectorY()
+        {
+            bool isDirLeftRight = (mCurDirection == DirectionEnum.LEFT) || (mCurDirection == DirectionEnum.RIGHT);
+            return !isDirLeftRight;
+        }
 
         void SetJoyCurSpeedModeX()
         {
@@ -221,7 +231,6 @@ namespace GeneralUtility.Joystick
             }
             return dx;
         }
-
         double StepY()
         {
             double dY = 0;
@@ -362,7 +371,7 @@ namespace GeneralUtility.Joystick
             mFuctionName[4] = Function5;
             mFuctionName[5] = Function6;
         }
-      public  void RestoreAllChannelsValue()
+        public void RestoreAllChannelsValue()
         {
             foreach (JoystickChannelSet ch in mChannelSets)
             {
