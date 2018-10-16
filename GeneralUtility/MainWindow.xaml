@@ -26,9 +26,12 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <RadioButton Grid.Column="0" CommandParameter="{x:Static local:SpeedEnum.SLOW}" Content="Slow"   Command="{Binding Path=RadioButtonCommand}" GroupName="Speed" HorizontalAlignment="Center"/>
-                    <RadioButton Grid.Column="1" CommandParameter="{x:Static local:SpeedEnum.NORMAL}" IsChecked="True" Content="Normal"  GroupName="Speed" HorizontalAlignment="Center"/>
-                    <RadioButton  Grid.Column="2" CommandParameter="{x:Static local:SpeedEnum.FAST}" Content="Fast" GroupName="Speed" HorizontalAlignment="Center"/>
+                    <RadioButton Grid.Column="0" CommandParameter="{x:Static local:SpeedEnum.SLOW}" Content="Slow"   
+                                 Command="{Binding Path=RadioButtonCommand}" GroupName="Speed" HorizontalAlignment="Center"/>
+                    <RadioButton Grid.Column="1" CommandParameter="{x:Static local:SpeedEnum.NORMAL}" IsChecked="True" Content="Normal"  
+                                 Command="{Binding Path=RadioButtonCommand}" GroupName="Speed" HorizontalAlignment="Center"/>
+                    <RadioButton  Grid.Column="2" CommandParameter="{x:Static local:SpeedEnum.FAST}" Content="Fast" 
+                                  Command="{Binding Path=RadioButtonCommand}" GroupName="Speed" HorizontalAlignment="Center"/>
                 </Grid>
             </GroupBox>
 

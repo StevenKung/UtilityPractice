@@ -67,12 +67,12 @@ namespace GeneralUtility.Joystick
             bool syncX = false;
             bool syncY = false;
 
-            if (mChannelSets[set].ChannelX != null && isVectorX())
+            if (mChannelSets[set].ChannelX != null && IsVectorX())
             {
                 SetJoyCurSpeedModeX();
                 syncX = mChannelSets[set].ChannelX.Increment(mFactorX * StepX());
             }
-            if (mChannelSets[set].ChannelY != null && isVectorY())
+            if (mChannelSets[set].ChannelY != null && IsVectorY())
             {
                 SetJoyCurSpeedModeY();
                 syncY = mChannelSets[set].ChannelY.Increment(mFactorY * StepY());
@@ -95,18 +95,17 @@ namespace GeneralUtility.Joystick
                 var task = CheckMotionStatusDoneAsyn(motor);
                 FailureHandling(await task);
             }
-
-
         }
 
         void FailureHandling(bool Result)
         {
             if (!Result)
             {
-
+                RestoreAllChannelsValue();
+                FailureOccured(this, EventArgs.Empty);
             }
         }
-
+        public EventHandler FailureOccured;
 
         async Task<bool> CheckMotionStatusDoneAsyn(MotorSimulation Motor)
         {
@@ -116,7 +115,7 @@ namespace GeneralUtility.Joystick
                 while (Motor.Status == MotorSimulation.StatusEnum.EXECUTING)
                 { }
             });
-            return await Task.WhenAny(task, Task.Delay(1000000)) == task;
+            return await Task.WhenAny(task, Task.Delay(10000)) == task;
         }
 
         internal void CallBackFunction(string FunctionName)
@@ -157,12 +156,12 @@ namespace GeneralUtility.Joystick
             SetJoyCurSpeedModeX();
             SetJoyCurSpeedModeY();
         }
-        bool isVectorX()
+        bool IsVectorX()
         {
             bool isDirUpDown = (mCurDirection == DirectionEnum.UP) || (mCurDirection == DirectionEnum.DOWN);
             return !isDirUpDown;
         }
-        bool isVectorY()
+        bool IsVectorY()
         {
             bool isDirLeftRight = (mCurDirection == DirectionEnum.LEFT) || (mCurDirection == DirectionEnum.RIGHT);
             return !isDirLeftRight;
@@ -265,6 +264,7 @@ namespace GeneralUtility.Joystick
             JoyStickChannel channel = FindChannelByName(Name);
             return channel.GetValue();
         }
+
         JoyStickChannel FindChannelByName(string Name)
         {
             foreach (JoystickChannelSet set in mChannelSets)
@@ -302,8 +302,6 @@ namespace GeneralUtility.Joystick
                 mFuctionName.Add(string.Empty);
                 mFuctionName.Add(string.Empty);
             }
-
-
             mCallback = string.Empty;
             mMessage = string.Empty;
 
@@ -328,11 +326,7 @@ namespace GeneralUtility.Joystick
             }
         }
 
-
-        void SetJoyDirection(DirectionEnum Direction)
-        {
-            mCurDirection = Direction;
-        }
+        void SetJoyDirection(DirectionEnum Direction) { mCurDirection = Direction; }
 
         public void SetXChannel(string Name, int Value, MotorSimulation Motor, double PosLimit = int.MaxValue, double NegLimit = int.MinValue, SETEnum Set = SETEnum.ONE)
         {

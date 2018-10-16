@@ -26,6 +26,13 @@ namespace GeneralUtility
         {
             InitializeComponent();
             Closing += (s, e) => ViewModelLocator.Cleanup();
+            ViewModelLocator.MainStatic.ControllerFailed += ShutDownHandle;
+        }
+
+        void ShutDownHandle(object sender , EventArgs e)
+        {
+            DialogResult = false;
+            Close();
         }
     }
 }

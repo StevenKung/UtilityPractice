@@ -23,14 +23,19 @@ namespace GeneralUtility
         public MainViewModel()
         {
             Testused();
-            
+
             RadioButtonCommand = new RelayCommand<object>(RadioButtonExecute);
             FunctionCommand = new RelayCommand<object>(FunctionExecute);
             ChangeChannelCommand = new RelayCommand<object>(ChangeChannelExecute);
-            JoyStickTriggerCommand = new RelayCommand<object>(JoystickTriggerExecute, isTriggerExecutable);
-            ConfirmCommand = new RelayCommand<object>(ConfirmExecutte, isTriggerExecutable);
-            CancelCommand = new RelayCommand<object>(CancelExecute, isTriggerExecutable);
+            JoyStickTriggerCommand = new RelayCommand<object>(JoystickTriggerExecute, IsTriggerExecutable);
+            ConfirmCommand = new RelayCommand<object>(ConfirmExecutte, IsTriggerExecutable);
+            CancelCommand = new RelayCommand<object>(CancelExecute, IsTriggerExecutable);
+            joy.FailureOccured = (sender, e) => { ControllerFailed(this, EventArgs.Empty); };
         }
+
+        public EventHandler ControllerFailed;
+
+        #region Public Commands
 
         public ICommand RadioButtonCommand { get; private set; }
         private void RadioButtonExecute(object parameter)
@@ -64,7 +69,7 @@ namespace GeneralUtility
             RaisePropertyChanged(nameof(ValueX));
             RaisePropertyChanged(nameof(ValueY));
         }
-        private bool isTriggerExecutable(object parameter) { return isComplete; }
+        private bool IsTriggerExecutable(object parameter) { return isComplete; }
 
         public ICommand CancelCommand { get; private set; }
 
@@ -83,6 +88,9 @@ namespace GeneralUtility
             window?.Close();
         }
 
+        #endregion
+
+
         private void Testused()
         {
             joy.SetMessage("SetMessage");
@@ -94,8 +102,7 @@ namespace GeneralUtility
             int benchmark = 1111;
             motor.Drive(benchmark);
             joy.SetXChannel(motor.DeviceName, benchmark, motor);
-            joy.SetJoySpeedX(int.MaxValue, int.MaxValue / 20, 1);
-
+            joy.SetJoySpeedX(int.MaxValue / 20, int.MaxValue / 30, 100);
         }
     }
 }
